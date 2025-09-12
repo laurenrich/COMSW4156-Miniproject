@@ -6,12 +6,9 @@ import java.util.ArrayList;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-
 
 /**
  * This class defines the controller for the API. It defines the endpoints for the API.
@@ -54,14 +51,13 @@ public class RouteController {
   /**
    * Get and return a list of all the books with available copies.
    *
-   * @return A {@code ResponseEntity} containing a list of available {@code Book} objects with an
-   *         HTTP 200 response if sucessful, or a message indicating an error occurred with an
+   * @return HTTP 200 response if sucessful, or a message indicating an error occurred with an
    *         HTTP 500 response.
    */
   @PutMapping({"/books/available"})
   public ResponseEntity<?> getAvailableBooks() {
     try {
-      ArrayList<Book> availableBooks = new ArrayList<>();
+      List<Book> availableBooks = new ArrayList<>();
 
       for (Book book : mockApiService.getBooks()) {
         if (book.hasCopies()) {
@@ -76,32 +72,4 @@ public class RouteController {
               HttpStatus.OK);
     }
   }
-
-  /**
-   * Adds a copy to the {@code} Book object if it exists.
-   *
-   * @param bookId An {@code Integer} representing the unique id of the book.
-   * @return A {@code ResponseEntity} containing the updated {@code Book} object with an
-   *         HTTP 200 response if successful or HTTP 404 if the book is not found,
-   *         or a message indicating an error occurred with an HTTP 500 code.
-   */
-  @PatchMapping({"/book/{bookId}/add"})
-  public ResponseEntity<?> addCopy(@PathVariable Integer bookId) {
-    try {
-      for (Book book : mockApiService.getBooks()) {
-        StringBuilder currBookId = new StringBuilder(book.getId());
-        if (bookId.equals(book.getId())) {
-          book.addCopy();
-          return new ResponseEntity<>(book, HttpStatus.OK);
-        }
-      }
-
-      return new ResponseEntity<>("Book not found.", HttpStatus.I_AM_A_TEAPOT);
-    } catch (Exception e) {
-      System.err.println(e);
-      return new ResponseEntity<>("Error occurred when adding a copy to the book",
-              HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
 }
