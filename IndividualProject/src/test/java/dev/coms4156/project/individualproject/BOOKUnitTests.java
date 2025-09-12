@@ -39,7 +39,7 @@ public class BookUnitTests {
 
   @Test
   public void hasMultipleAuthorsWhenOneAuthor() {
-    ArrayList<String> authors = new ArrayList<>();
+    List<String> authors = new ArrayList<>();
     authors.add("John Doe");
     book.setAuthors(authors);
     assertFalse(book.hasMultipleAuthors());
@@ -47,7 +47,7 @@ public class BookUnitTests {
 
   @Test
   public void hasMultipleAuthorsWhenMultipleAuthors() {
-    ArrayList<String> authors = new ArrayList<>();
+    List<String> authors = new ArrayList<>();
     authors.add("John Doe");
     authors.add("Jane Doe");
     book.setAuthors(authors);
