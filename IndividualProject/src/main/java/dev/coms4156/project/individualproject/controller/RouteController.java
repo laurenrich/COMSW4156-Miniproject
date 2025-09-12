@@ -1,12 +1,21 @@
 package dev.coms4156.project.individualproject.controller;
 
-import org.springframework.web.bind.annotation.*;
 import dev.coms4156.project.individualproject.model.BOOK;
-import java.util.ArrayList;
-
-import org.springframework.http.*;
 import dev.coms4156.project.individualproject.service.MockAPIService;
+import java.util.ArrayList;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+
+
+/**
+ * This class defines the controller for the API. It defines the endpoints for the API.
+ */
 @RestController
 public class RouteController {
 
@@ -63,8 +72,8 @@ public class RouteController {
       return new ResponseEntity<>(mockApiService.getBooks(), HttpStatus.OK);
     } catch (Exception e) {
       System.err.println(e);
-        return new ResponseEntity<>("Error occurred when getting all available books",
-          HttpStatus.OK);
+      return new ResponseEntity<>("Error occurred when getting all available books",
+              HttpStatus.OK);
     }
   }
 
@@ -89,6 +98,9 @@ public class RouteController {
 
       return new ResponseEntity<>("Book not found.", HttpStatus.I_AM_A_TEAPOT);
     } catch (Exception e) {
+      System.err.println(e);
+      return new ResponseEntity<>("Error occurred when adding a copy to the book",
+              HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
