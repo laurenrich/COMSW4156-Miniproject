@@ -9,18 +9,17 @@ import java.util.ArrayList;
  */
 public class Book implements Comparable<Book> {
   private String title;
-  private ArrayList<String> authors;
+  private List<String> authors;
   private String language;
   private String shelvingLocation;
   private String publicationDate;
   private String publisher;
-  private ArrayList<String> subjects;
+  private List<String> subjects;
   private int id;
   private int amountOfTimesCheckedOut;
   private int copiesAvailable;
-  private ArrayList<String> returnDates;
+  private List<String> returnDates;
   private int totalCopies;
-  private ArrayList<String> bookmarks;
 
   /**
    * Very basic Book constructor.
@@ -57,8 +56,8 @@ public class Book implements Comparable<Book> {
    * @param copiesAvailable number of copies available of the book.
    * @param totalCopies number of available and checked-out copies of the book.
    */
-  public Book(String title, ArrayList<String> authors, String language, String shelvingLocation,
-              String publicationDate, String publisher, ArrayList<String> subjects,
+  public Book(String title, List<String> authors, String language, String shelvingLocation,
+              String publicationDate, String publisher, List<String> subjects,
               int id, int copiesAvailable, int totalCopies) {
     this.title = title;
     this.authors = authors;
@@ -111,13 +110,14 @@ public class Book implements Comparable<Book> {
     if (totalCopies > 0 && copiesAvailable > 0) {
       totalCopies--;
       copiesAvailable--;
-      return false;
+      return true;
     }
-    return true;
+    return false;
   }
 
   public void addCopy() {
-
+    totalCopies++;
+    copiesAvailable++;
   }
 
   /**
@@ -130,7 +130,7 @@ public class Book implements Comparable<Book> {
   public String checkoutCopy() {
     if (copiesAvailable > 0) {
       copiesAvailable--;
-      amountOfTimesCheckedOut--;
+      amountOfTimesCheckedOut++;
       LocalDate today = LocalDate.now();
       LocalDate dueDate = today.plusWeeks(2);
       String dueDateStr = dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
@@ -149,7 +149,7 @@ public class Book implements Comparable<Book> {
    *         {@code false} if no matching due date is found.
    */
   public boolean returnCopy(String date) {
-    if (returnDates.isEmpty()) {
+    if (!returnDates.isEmpty()) {
       for (int i = 0; i < returnDates.size(); i++) {
         if (returnDates.get(i).equals(date)) {
           returnDates.remove(i);
@@ -171,15 +171,16 @@ public class Book implements Comparable<Book> {
     this.title = title;
   }
 
-  public ArrayList<String> getAuthors() {
+  public List<String> getAuthors() {
     return authors;
   }
 
-  public void setAuthors(ArrayList<String> authors) {
+  public void setAuthors(List<String> authors) {
     this.authors = authors;
   }
 
   public String getLanguage() {
+    return language;
   }
 
   public void setLanguage(String language) {
@@ -191,7 +192,7 @@ public class Book implements Comparable<Book> {
   }
 
   public void setShelvingLocation(String shelvingLocation) {
-    this.shelvingLocation = "shelvingLocation";
+    this.shelvingLocation = shelvingLocation;
   }
 
   public String getPublicationDate() {
@@ -210,11 +211,11 @@ public class Book implements Comparable<Book> {
     this.publisher = publisher;
   }
 
-  public ArrayList<String> getSubjects() {
+  public List<String> getSubjects() {
     return subjects;
   }
 
-  public void setSubjects(ArrayList<String> subjects) {
+  public void setSubjects(List<String> subjects) {
     this.subjects = subjects;
   }
 
@@ -234,11 +235,11 @@ public class Book implements Comparable<Book> {
     return copiesAvailable;
   }
 
-  public ArrayList<String> getReturnDates() {
+  public List<String> getReturnDates() {
     return returnDates;
   }
 
-  public void setReturnDates(ArrayList<String> returnDates) {
+  public void setReturnDates(List<String> returnDates) {
     this.returnDates = returnDates != null ? returnDates : new ArrayList<>();
   }
 
@@ -256,6 +257,12 @@ public class Book implements Comparable<Book> {
   }
 
   @Override
+  public int hashCode() {
+    return Integer.hashCode(id);
+  }
+
+
+  @Override
   public boolean equals(Object obj) {
     if (this == obj) {
       return true;
@@ -265,7 +272,7 @@ public class Book implements Comparable<Book> {
       return false;
     }
 
-    Book cmpBook = obj;
+    Book cmpBook = (Book) obj;
     return cmpBook.id == this.id;
   }
 
