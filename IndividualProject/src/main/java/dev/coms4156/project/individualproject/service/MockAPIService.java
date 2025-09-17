@@ -37,7 +37,7 @@ public class MockApiService {
         System.out.println("Successfully loaded books from mockdata/books.json.");
       }
     } catch (Exception e) {
-        System.err.println("Failed to load books: " + e.getMessage());
+      System.err.println("Failed to load books: " + e.getMessage());
     }
   }
 

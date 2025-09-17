@@ -70,7 +70,60 @@ public class RouteController {
     } catch (Exception e) {
       System.err.println(e);
       return new ResponseEntity<>("Error occurred when getting all available books",
-              HttpStatus.OK);
+              HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  /**
+   * Get and return a list of 10 recommended books.
+   * Half are the most popular books (highest checkout count).
+   * Half are randomly selected books.
+   *
+   * @return HTTP 200 response if sucessful, or a message indicating an error occurred with an
+   *         HTTP 500 response.
+   */
+  @GetMapping({"books/recommendation"}) 
+  public ResponseEntity<?> getRecommendation() {
+    try {
+      List<Book> books = mockApiService.getBooks();
+      if (books.size() < 10) {
+        return new ResponseEntity<>("Not enough recommendedbooks", HttpStatus.BAD_REQUEST);
+      }
+      Collections.sort(books, (a, b) -> 
+          Integer.compare(b.getAmountOfTimesCheckedOut(), a.getAmountOfTimesCheckedOut()));
+      
+      List<Book> popularBooks = books.subList(0, 5);
+
+      List<Book> remainingBooks = new ArrayList<>();
+      for (Book book : books) {
+        if (!popularBooks.contains(book)) {
+          remainingBooks.add(book);
+        }
+      }
+
+      Collections.shuffle(remainingBooks);
+      List<Book> randomBooks = new ArrayList<>();
+      for (int i = 0; i < 5; i++) {
+        randomBooks.add(remainingBooks.get(i));
+      }
+
+      List<Book> recommendedBooks = new ArrayList<>();
+      recommendedBooks.addAll(popularBooks);
+      recommendedBooks.addAll(randomBooks);
+
+      return new ResponseEntity<>(recommendedBooks, HttpStatus.OK);
+    } catch (Exception e) {
+      System.err.println(e);
+      return new ResponseEntity<>("Error occurred when getting recommendations", 
+                                  HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+
+
+
+
 }
+
+
+
