@@ -70,7 +70,91 @@ public class RouteController {
     } catch (Exception e) {
       System.err.println(e);
       return new ResponseEntity<>("Error occurred when getting all available books",
-              HttpStatus.OK);
+              HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  /**
+   * Get and return a list of 10 recommended books.
+   * Half are the most popular books (highest checkout count).
+   * Half are randomly selected books.
+   *
+   * @return HTTP 200 response if sucessful, or a message indicating an error occurred with an
+   *         HTTP 500 response.
+   */
+  @GetMapping({"books/recommendation"}) 
+  public ResponseEntity<?> getRecommendation() {
+    try {
+      List<Book> books = mockApiService.getBooks();
+      if (books.size() < 10) {
+        return new ResponseEntity<>("Not enough recommendedbooks", HttpStatus.BAD_REQUEST);
+      }
+      Collections.sort(books, (a, b) -> 
+          Integer.compare(b.getAmountOfTimesCheckedOut(), a.getAmountOfTimesCheckedOut()));
+      
+      List<Book> popularBooks = books.subList(0, 5);
+
+      List<Book> remainingBooks = new ArrayList<>();
+      for (Book book : books) {
+        if (!popularBooks.contains(book)) {
+          remainingBooks.add(book);
+        }
+      }
+
+      Collections.shuffle(remainingBooks);
+      List<Book> randomBooks = new ArrayList<>();
+      for (int i = 0; i < 5; i++) {
+        randomBooks.add(remainingBooks.get(i));
+      }
+
+      List<Book> recommendedBooks = new ArrayList<>();
+      recommendedBooks.addAll(popularBooks);
+      recommendedBooks.addAll(randomBooks);
+
+      return new ResponseEntity<>(recommendedBooks, HttpStatus.OK);
+    } catch (Exception e) {
+      System.err.println(e);
+      return new ResponseEntity<>("Error occurred when getting recommendations", 
+                                  HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  /**
+   * Check out a book by its ID.
+   *
+   * @param id The ID of the book to check out
+   * @return HTTP 200 response if successful, or a message indicating an error occurred with an
+   *         HTTP 500 response.   
+  */
+  @PostMapping("/checkout")
+  public ResponseEntity<?> checkoutBook(@RequestParam int id) {
+    try {
+      Book checkoutBook = null;
+      for (Book book : mockApiService.getBooks()) {
+        if (book.getId() == id) {
+          checkoutBook = book;
+          break;
+        }
+      }
+      if (checkoutBook == null) {
+        return new ResponseEntity<>("Book not found", HttpStatus.NOT_FOUND);
+      }
+
+      String dueDate = checkoutBook.checkoutCopy();
+      if (dueDate == null) {
+        return new ResponseEntity<>("Cannot checkout book", HttpStatus.BAD_REQUEST);
+      }
+
+      mockApiService.updateBook(checkoutBook);
+
+      return new ResponseEntity<>(checkoutBook, HttpStatus.OK);
+    } catch (Exception e) {
+      System.err.println(e);
+      return new ResponseEntity<>("Error occurred when checking out book", 
+                                  HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
+
+
+
