@@ -119,10 +119,41 @@ public class RouteController {
     }
   }
 
+  /**
+   * Check out a book by its ID.
+   *
+   * @param id The ID of the book to check out
+   * @return HTTP 200 response if successful, or a message indicating an error occurred with an
+   *         HTTP 500 response.   
+  */
+  @PostMapping("/checkout")
+  public ResponseEntity<?> checkoutBook(@RequestParam int id) {
+    try {
+      Book checkoutBook = null;
+      for (Book book : mockApiService.getBooks()) {
+        if (book.getId() == id) {
+          checkoutBook = book;
+          break;
+        }
+      }
+      if (checkoutBook == null) {
+        return new ResponseEntity<>("Book not found", HttpStatus.NOT_FOUND);
+      }
 
+      String dueDate = checkoutBook.checkoutCopy();
+      if (dueDate == null) {
+        return new ResponseEntity<>("Cannot checkout book", HttpStatus.BAD_REQUEST);
+      }
 
+      mockApiService.updateBook(checkoutBook);
 
-
+      return new ResponseEntity<>(checkoutBook, HttpStatus.OK);
+    } catch (Exception e) {
+      System.err.println(e);
+      return new ResponseEntity<>("Error occurred when checking out book", 
+                                  HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
 
 
