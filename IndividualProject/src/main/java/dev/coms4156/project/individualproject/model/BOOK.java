@@ -93,7 +93,7 @@ public class Book implements Comparable<Book> {
   }
 
   public boolean hasCopies() {
-    return copiesAvailable >= 0;
+    return copiesAvailable > 0;
   }
 
   public boolean hasMultipleAuthors() {
