@@ -118,10 +118,11 @@ public class RouteController {
   @GetMapping({"books/recommendation"}) 
   public ResponseEntity<?> getRecommendation() {
     try {
-      List<Book> books = mockApiService.getBooks();
+      List<Book> allBooks = mockApiService.getBooks();
       if (books.size() < 10) {
         return new ResponseEntity<>("Not enough recommendedbooks", HttpStatus.BAD_REQUEST);
       }
+      List<Book> books = new ArrayList<>(allBooks);
       Collections.sort(books, (a, b) -> 
           Integer.compare(b.getAmountOfTimesCheckedOut(), a.getAmountOfTimesCheckedOut()));
       
