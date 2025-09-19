@@ -99,6 +99,7 @@ public class RouteControllerTests {
     ResponseEntity<?> response = controller.checkoutBook(45);
     Book firstCheckout = (Book) response.getBody();
     assertEquals(HttpStatus.OK, response.getStatusCode());
+
     assertEquals(0, firstCheckout.getCopiesAvailable());
     assertEquals(2, firstCheckout.getAmountOfTimesCheckedOut());
     assertEquals(4, firstCheckout.getReturnDates().size()); 
