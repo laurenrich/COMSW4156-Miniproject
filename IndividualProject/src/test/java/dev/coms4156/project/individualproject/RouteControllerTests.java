@@ -57,6 +57,19 @@ public class RouteControllerTests {
     assertEquals("Book not found.", response.getBody());
   }
 
+  @Test
+  public void testAddCopySuccess() {
+    List<Book> books = new ArrayList<>();
+    Book testBook = new Book("Test Book", 123);
+    books.add(testBook);
+    when(mockApiService.getBooks()).thenReturn(books);
+    
+    ResponseEntity<?> response = routeController.addCopy(123);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(testBook, response.getBody());
+  }
+
 
   @Test
   public void getRecommendationsSuccess() {
@@ -107,9 +120,4 @@ public class RouteControllerTests {
     assertEquals(HttpStatus.BAD_REQUEST, secondCheckout.getStatusCode());
     assertEquals("Cannot checkout book", secondCheckout.getBody());
   }
-
-
-
-
-
 }
