@@ -11,5 +11,5 @@ $ cd $HOME
 $ curl -OL https://github.com/pmd/pmd/releases/download/pmd_releases%2F7.17.0/pmd-dist-7.17.0-bin.zip
 $ unzip pmd-dist-7.17.0-bin.zip
 $ alias pmd="$HOME/pmd-bin-7.17.0/bin/pmd"
-$ pmd check -d /Users/laurenrich/COMSW4156 Assignment 1/4156-Miniproject-2025-Students/IndividualProject -R rulesets/java/quickstart.xml -f text
+$ pmd check -d /Users/laurenrich/"COMSW4156 Assignment 1"/4156-Miniproject-2025-Students/IndividualProject -R rulesets/java/quickstart.xml -f text
 
