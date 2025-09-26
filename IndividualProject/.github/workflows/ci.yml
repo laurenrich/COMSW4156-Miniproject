@@ -19,17 +19,15 @@ jobs:
         uses: actions/setup-java@v4
         with: 
           java-version: '17'
+          distribution: 'temurin'
 
-      - name: Maven Package
-        run: mvn -B clean package -DskipTests
-      - name: Maven Verify
-        run: mvn -B clean verify
+      - name: Build and Test
+        run: 
+          cd IndividualProject
+          ./mvnw clean test
+          ./mvnw checkstyle:check
+          ./mvnw jacoco:report
       
-      - name: Run Checkstyle
-        run: mvn checkstyle:check
-
-      - name: Generate JaCoCo Report
-        run: mvn jacoco:report
 
 
  
