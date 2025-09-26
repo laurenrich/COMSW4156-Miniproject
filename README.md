@@ -16,7 +16,10 @@ When you open IntelliJ you have the option to clone from a GitHub repo, click th
 
 ### Build the Project
 
-Run `mvn clean package`
+First, navigate to the project directory: `cd IndividualProject`
+
+Then run the build: `mvn clean package`
+
 
 ## Running Tests
 
@@ -121,12 +124,12 @@ pmd check -d /path/to/your/project -R rulesets/java/quickstart.xml -f text
 
 This repository uses GitHub Actions to perform continuous integration. The CI pipeline compiles the program and runs all unit tests on pushes to and pull requests targeting the main branch.
 
+
 **Workflow file**: `.github/workflows/ci.yml`
 **Actions performed**:
-- Maven Package: `mvn -B clean package -DskipTests`
-- Maven Verify: `mvn -B clean verify`
-- Run Checkstyle: `mvn checkstyle:check`
-- Generate JaCoCo Report: `mvn jacoco:report`
+- Build and Test: `./mvnw clean test`
+- Run Checkstyle: `./mvnw checkstyle:check`
+- Generate JaCoCo Report: `./mvnw jacoco:report`
 
 ## Tools used
 
