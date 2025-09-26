@@ -22,12 +22,8 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and Test
-        run: 
+        run: |
           cd IndividualProject
           ./mvnw clean test
           ./mvnw checkstyle:check
           ./mvnw jacoco:report
-      
-
-
- 
