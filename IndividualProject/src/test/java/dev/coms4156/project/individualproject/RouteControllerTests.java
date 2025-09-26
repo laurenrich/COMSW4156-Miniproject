@@ -120,4 +120,33 @@ public class RouteControllerTests {
     assertEquals(HttpStatus.BAD_REQUEST, secondCheckout.getStatusCode());
     assertEquals("Cannot checkout book", secondCheckout.getBody());
   }
+
+  @Test
+  public void testIndex() {
+    String result = routeController.index();
+    assertEquals("Welcome to the home page! In order to make an API call direct your browser"
+        + "or Postman to an endpoint.", result);
+  }
+
+  @Test
+  public void testGetAvailableBooks() {
+    MockApiService service = new MockApiService();
+    RouteController controller = new RouteController(service);
+    ResponseEntity<?> response = controller.getAvailableBooks();
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    List<Book> availableBooks = (List<Book>) response.getBody();
+    assertEquals(50, availableBooks.size());
+  }
+
+  @Test
+  public void testAddCopyBookNotFound() {
+    List<Book> books = new ArrayList<>();
+    Book testBook = new Book("Test", 123);
+    books.add(testBook);
+    when(mockApiService.getBooks()).thenReturn(books);
+    ResponseEntity<?> response = routeController.addCopy(456);
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    assertEquals("Book not found.", response.getBody());
+  }
+
 }

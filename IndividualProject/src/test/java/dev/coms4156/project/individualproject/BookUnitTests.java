@@ -97,7 +97,56 @@ public class BookUnitTests {
     assertNull(dueDate);
   }
 
+  @Test
+  public void addCopyWhenCopiesAvailable() {
+    Book testBook = new Book("Test", 1);
+    testBook.addCopy();
+    assertEquals(2, testBook.getTotalCopies());
+    assertEquals(2, testBook.getCopiesAvailable());
+  }
 
+  @Test
+  public void testReturnCopySuccess() {
+    Book testBook = new Book("Test", 1);
+    String dueDate = testBook.checkoutCopy();
+    assertNotNull(dueDate);
+    assertEquals(0, testBook.getCopiesAvailable()); 
+    assertEquals(1, testBook.getReturnDates().size()); 
+ 
+    assertTrue(testBook.returnCopy(dueDate));
+    assertEquals(1, testBook.getCopiesAvailable());
+    assertEquals(0, testBook.getReturnDates().size());
+  }
+
+  @Test
+  public void testReturnCopyFailureInvalidDate() {
+    Book testBook = new Book("Test", 1);
+    testBook.checkoutCopy();
+    assertFalse(testBook.returnCopy("invalid-date"));
+  }
+
+  @Test
+  public void testReturnCopyFailureEmptyReturnDates() {
+    Book testBook = new Book("Test", 1);
+    assertEquals(0, testBook.getReturnDates().size());
+    assertFalse(testBook.returnCopy("invalid-date"));
+  }
+
+  @Test
+  public void testHasCopiesWhenCopiesAvailable() {
+    Book testBook = new Book("Test", 1);
+    assertEquals(1, testBook.getTotalCopies());
+    assertEquals(1, testBook.getCopiesAvailable());
+    assertTrue(testBook.hasCopies());
+  }
+
+  @Test
+  public void testHasCopiesWhenNoCopiesAvailable() {
+    Book testBook = new Book("Test", 1);
+    testBook.checkoutCopy();
+    assertEquals(0, testBook.getCopiesAvailable());
+    assertFalse(testBook.hasCopies());
+  }
 
   
 }
